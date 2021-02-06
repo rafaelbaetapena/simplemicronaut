@@ -22,7 +22,7 @@ internal class CustomerControllerIntegrationTest {
 
         val request: HttpRequest<Any> = HttpRequest.GET("/customers/368.564.500-52")
         val body = client.toBlocking().retrieve(request)
-        println(body)
+
         Assertions.assertNotNull(body)
         Assertions.assertEquals("368.564.500-52", body)
     }
@@ -31,7 +31,9 @@ internal class CustomerControllerIntegrationTest {
     fun `when try to get a customer with invalid document expected returns invalid CPF message` () {
 
         val request: HttpRequest<Any> = HttpRequest.GET("/customers/999.999.999-99")
-        val responseException = Assertions.assertThrows(HttpClientResponseException::class.java) { client.toBlocking().retrieve(request) }
+        val responseException = Assertions.assertThrows(HttpClientResponseException::class.java)
+            { client.toBlocking().retrieve(request) }
+
         Assertions.assertNotNull(responseException)
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseException.status)
         Assertions.assertEquals("document: CPF is invalid", responseException.message)
@@ -43,7 +45,7 @@ internal class CustomerControllerIntegrationTest {
         val postCustomerRequest = PostCustomerRequest("João Silva", "368.564.500-52")
         val request: HttpRequest<Any> = HttpRequest.POST("/customers", postCustomerRequest)
         val body = client.toBlocking().retrieve(request)
-        println(body)
+
         Assertions.assertNotNull(body)
         Assertions.assertEquals("João Silva 368.564.500-52", body)
     }
